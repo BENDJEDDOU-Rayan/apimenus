@@ -76,6 +76,10 @@ public class MenuService {
     }
 
     public boolean createMenu(String title, String description, float price) {
+        if(menuRepo == null ){
+            System.err.println("MenuRepositoryInterface n'est pas injecté");
+            return false;
+        }
         return menuRepo.createMenu(title, description, price);
     }
 

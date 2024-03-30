@@ -19,17 +19,17 @@ public class MenuResource {
     private MenuService service;
 
     /**
+     * Constructeur par défaut
+     */
+    public MenuResource(){}
+
+    /**
      * Constructeur permettant d'initialiser le service avec une interface d'accès aux données
      * @param menuRepo objet implémentant l'interface d'accès aux données
      */
     public @Inject MenuResource(MenuRepositoryInterface menuRepo){
         this.service = new MenuService(menuRepo) ;
     }
-
-    /**
-     * Constructeur par défaut
-     */
-    public MenuResource(){}
 
     /**
      * Constructeur permettant d'initialiser le service d'accès aux menus
@@ -91,6 +91,7 @@ public class MenuResource {
     @Path("create")
     @Consumes("application/json")
     public Response createMenu(MenuCreationRequest request){
+
         if(!service.createMenu(request.getTitle(), request.getDescription(), request.getPrice()))
             return Response.ok("Une erreur est survenue lors de la création du menu " + request.getTitle() + " !").build();
         else
