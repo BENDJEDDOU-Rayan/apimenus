@@ -119,14 +119,14 @@ public class MenuRepositoryMariadb implements  MenuRepositoryInterface, Closeabl
 
     @Override
     public boolean createMenu(String title, String description, float price) {
-        String query = "INSERT INTO Menu VALUES (title, description, price)";
+        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, ?)";
         int nbRowModified;
 
         // construction et exécution d'une requête préparée
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
             ps.setString(1, title);
             ps.setString(2, description);
-            ps.setString(3, String.valueOf(price) );
+            ps.setFloat(3, price);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
