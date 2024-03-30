@@ -118,7 +118,7 @@ public class MenuRepositoryMariadb implements  MenuRepositoryInterface, Closeabl
     }
 
     @Override
-    public boolean createMenu(int id, String title, String description, float price) {
+    public boolean createMenu(String title, String description, float price) {
         String query = "INSERT INTO Menu VALUES (title, description, price)";
         int nbRowModified;
 

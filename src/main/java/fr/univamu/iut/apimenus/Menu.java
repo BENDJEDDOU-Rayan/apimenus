@@ -5,10 +5,10 @@ package fr.univamu.iut.apimenus;
  */
 public class Menu {
 
-    private int id;
-    private String title;
-    private String description;
-    private float price;
+    protected int id;
+    protected String title;
+    protected String description;
+    protected float price;
 
     /**
      * Constructeur de l'objet Menu
@@ -23,6 +23,8 @@ public class Menu {
         this.description = description;
         this.price = price;
     }
+
+    public Menu() {}
 
     /**
      * Méthode permettant d'accéder à la référence du menu

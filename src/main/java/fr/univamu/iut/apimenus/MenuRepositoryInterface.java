@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface MenuRepositoryInterface {
 
     /**
-     *  Méthode fermant le dépôt où sont stockées les informations sur les livres
+     *  Méthode fermant le dépôt où sont stockées les informations sur les menus
      */
     void close();
 
@@ -37,13 +37,12 @@ public interface MenuRepositoryInterface {
 
     /**
      * Méthode qui permet de créer un objet Menu
-     * @param id int id du menu à créer
      * @param title String titre du menu à créer
      * @param description String description du menu à créer
      * @param price float prix du menu à créer
      * @return true si le menu a été crée, false sinon
      */
-    boolean createMenu(int id, String title, String description, float price);
+    boolean createMenu(String title, String description, float price);
 
     /**
      * Méthode qui permet de supprimer un menu en passant l'id en paramètre
