@@ -68,6 +68,20 @@ public class MenuService {
         return result;
     }
 
+    public String getAllPlatFromMenuJson(int id_menu) {
+        ArrayList<MenuPlatDTO> listPlatDTO = menuRepo.getAllPlatFromMenu(id_menu);
+
+        // création du json et conversion de la liste des plats associées au menu
+        String result = null;
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            result = jsonb.toJson(listPlatDTO);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return result;
+    }
+
     /**
      * Méthode permettant de mettre à jours les informations d'un menu
      *
@@ -99,5 +113,22 @@ public class MenuService {
         return menuRepo.deleteMenu(id);
     }
 
+    /**
+     * Méthode permettant d'associer un plat à un menu
+     * @param id_menu id du menu
+     * @param id_plat id du plat à associer
+     * @return true si l'association s'est bien déroulée, false si non
+     */
+    public boolean addPlatToMenu(int id_menu, int id_plat) {
+        return menuRepo.addPlatToMenu(id_menu, id_plat);
+    }
+
+    public boolean removePlatFromMenu(int id_menu, int id_plat) {
+        return menuRepo.removePlatFromMenu(id_menu, id_plat);
+    }
+
+    public boolean removeAllPlatsFromMenu(int id_menu) {
+        return menuRepo.removeAllPlatsFromMenu(id_menu);
+    }
 
 }

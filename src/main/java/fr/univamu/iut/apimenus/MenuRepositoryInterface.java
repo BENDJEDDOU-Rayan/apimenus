@@ -23,7 +23,6 @@ public interface MenuRepositoryInterface {
 
     /**
      * Méthode qui retourne une ArrayList de tous les objets Menu
-     *
      * @return ArrayList d'objet Menu
      */
     ArrayList<Menu> getAllMenu();
@@ -57,7 +56,14 @@ public interface MenuRepositoryInterface {
      */
     boolean deleteMenu(int id_menu);
 
-    HashMap<Integer, Integer> getAllPlatFromMenu(int id_menu);
+    ArrayList<MenuPlatDTO> getAllPlatFromMenu(int id_menu);
+
+    /**
+     * Méthode qui permet d'associer un plat à un menu
+     * @param id_menu id du menu
+     * @param id_plat id du plat à associer
+     * @return true si l'association s'est bien déroulée, false si non
+     */
     boolean addPlatToMenu(int id_menu, int id_plat);
 
     boolean removePlatFromMenu(int id_menu, int id_plat);

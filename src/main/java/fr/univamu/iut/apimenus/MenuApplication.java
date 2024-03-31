@@ -6,6 +6,9 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
+/**
+ * Main de l'api
+ */
 @ApplicationPath("/api")
 @ApplicationScoped
 public class MenuApplication extends Application {

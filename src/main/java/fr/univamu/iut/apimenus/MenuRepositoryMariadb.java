@@ -5,6 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Classe qui permet d'exécuter les requêtes sql
+ */
 public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable {
 
     /**
@@ -187,24 +190,32 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
     }
 
     @Override
-    public HashMap<Integer, Integer> getAllPlatFromMenu(int id_menu) {
-        HashMap<Integer, Integer> listPlats;
+    public ArrayList<MenuPlatDTO> getAllPlatFromMenu(int id_menu) {
+        ArrayList<MenuPlatDTO> listPlats;
 
         String query = "SELECT * FROM Plat_menu where id_menu=?";
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, id_menu);
+
+
             // exécution de la requête
             ResultSet result = ps.executeQuery();
 
-            listPlats = new HashMap<>();
+            listPlats = new ArrayList<>();
 
             // récupération du premier (et seul) tuple résultat
             while (result.next()) {
                 int id = result.getInt("id_menu");
                 int id_plat = result.getInt("id_plat");
 
-                listPlats.put(id, id_plat);
+                // Création du DTO courant
+                MenuPlatDTO courant = new MenuPlatDTO();
+                courant.setId_menu(id);
+                courant.setId_plat(id_plat);
+
+                listPlats.add(courant);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -212,6 +223,12 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return listPlats;
     }
 
+    /**
+     * Méthode qui permet d'associer un plat à un menu
+     * @param id_menu int id du menu
+     * @param id_plat int id du plat à associer
+     * @return true si l'association s'est effectuée, false si non
+     */
     @Override
     public boolean addPlatToMenu(int id_menu, int id_plat) {
         String query = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";

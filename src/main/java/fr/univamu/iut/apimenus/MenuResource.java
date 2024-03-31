@@ -58,7 +58,7 @@ public class MenuResource {
      * @return les informations du menu recherché au format JSON
      */
     @GET
-    @Path("{id}")
+    @Path("get/{id}")
     @Produces("application/json")
     public String getMenu(@PathParam("id") int id) {
 
@@ -118,6 +118,22 @@ public class MenuResource {
             throw new NotFoundException();
         } else {
             return Response.ok("Le menu " + id + " a bien été supprimé !").build();
+        }
+    }
+
+    /**
+     * Endpoint permettant d'associer un plat à un menu
+     * @param menuPlatDTO DTO qui sert à récupérer le contenu json
+     * @return une erreur si le menu n'est pas trouvé, un message si il est bien trouvé
+     */
+    @PUT
+    @Path("/add-plat-to-menu")
+    @Consumes("application/json")
+    public Response addPlatToMenu(MenuPlatDTO menuPlatDTO) {
+        if(!service.addPlatToMenu(menuPlatDTO.getId_menu(), menuPlatDTO.getId_plat())) {
+            throw new NotFoundException();
+        } else {
+            return Response.ok("Le plat N°" + menuPlatDTO.getId_plat() + " a bien été ajouté au menu N°" + menuPlatDTO.getId_menu()).build();
         }
     }
 
