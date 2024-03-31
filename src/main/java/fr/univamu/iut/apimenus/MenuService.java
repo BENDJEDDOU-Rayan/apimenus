@@ -115,14 +115,20 @@ public class MenuService {
 
     /**
      * Méthode permettant d'associer un plat à un menu
-     * @param id_menu id du menu
-     * @param id_plat id du plat à associer
+     * @param id_menu int id du menu
+     * @param id_plat int id du plat à associer
      * @return true si l'association s'est bien déroulée, false si non
      */
     public boolean addPlatToMenu(int id_menu, int id_plat) {
         return menuRepo.addPlatToMenu(id_menu, id_plat);
     }
 
+    /**
+     * Méthode permettant de dissocier un plat d'un menu
+     * @param id_menu int id du menu
+     * @param id_plat int id du plat à associer
+     * @return true si la disassociation s'est bien déroulée, false si non
+     */
     public boolean removePlatFromMenu(int id_menu, int id_plat) {
         return menuRepo.removePlatFromMenu(id_menu, id_plat);
     }

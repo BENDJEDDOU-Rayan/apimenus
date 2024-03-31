@@ -123,8 +123,9 @@ public class MenuResource {
 
     /**
      * Endpoint permettant d'associer un plat à un menu
-     * @param menuPlatDTO DTO qui sert à récupérer le contenu json
-     * @return une erreur si le menu n'est pas trouvé, un message si il est bien trouvé
+     * @param menuPlatDTO DTO qui contient l'id du menu et l'id du plat à associer
+     * @return Une réponse OK
+     * @throws NotFoundException si menu introuvable
      */
     @PUT
     @Path("/add-plat-to-menu")
@@ -134,6 +135,39 @@ public class MenuResource {
             throw new NotFoundException();
         } else {
             return Response.ok("Le plat N°" + menuPlatDTO.getId_plat() + " a bien été ajouté au menu N°" + menuPlatDTO.getId_menu()).build();
+        }
+    }
+
+    /**
+     * Endpoint permettant de dissocier un plat d'un menu
+     * @param id_menu id du menu
+     * @param id_plat id du plat à dissocier
+     * @return Un message de bon fonctionnement
+     * @throws NotFoundException si menu introuvable
+     */
+    @DELETE
+    @Path("/remove-plat-from-menu/{id_menu}/{id_plat}")
+    public Response removePlatFromMenu(@PathParam("id_menu") int id_menu, @PathParam("id_plat") int id_plat) {
+        if(!service.removePlatFromMenu(id_menu, id_plat)) {
+            throw new NotFoundException();
+        } else {
+            return Response.ok("Le plat N°" + id_plat + " a bien été supprimé du menu N°" + id_menu).build();
+        }
+    }
+
+    /**
+     * Endpoint permettant de dissocier tous les plats associés à un menu
+     * @param id_menu id du menu cible
+     * @return Un message de bon fonctionnement
+     * @throws NotFoundException si menu introuvable
+     */
+    @DELETE
+    @Path("/remove-all-plats-from-menu/{id_menu}")
+    public Response removeAllPlatsFromMenu(@PathParam("id_menu") int id_menu) {
+        if(!service.removeAllPlatsFromMenu(id_menu)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("Tous les plats du menu N°" + id_menu + " ont été supprimés !").build();
         }
     }
 

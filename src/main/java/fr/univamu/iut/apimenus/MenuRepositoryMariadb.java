@@ -248,6 +248,12 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return (nbRowModified != 0);
     }
 
+    /**
+     * Méthode qui permet de dissocier un plat d'un menu
+     * @param id_menu int id du menu cible
+     * @param id_plat int id du plat à dissocier
+     * @return true si la disassociation s'est bien déroulée, false si non
+     */
     @Override
     public boolean removePlatFromMenu(int id_menu, int id_plat) {
         String query = "DELETE FROM Plat_menu WHERE id_menu=? AND id_plat=?";
@@ -256,6 +262,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, id_menu);
+            ps.setInt(2, id_plat);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
@@ -266,6 +273,11 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return (nbRowModified != 0);
     }
 
+    /**
+     * Méthode qui permet de dissocier tous les plats associés à un menu
+     * @param id_menu int id du menu cible
+     * @return Une réponse OK.
+     */
     @Override
     public boolean removeAllPlatsFromMenu(int id_menu) {
         String query = "DELETE FROM Plat_menu WHERE id_menu=?";
