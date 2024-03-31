@@ -54,15 +54,15 @@ public class MenuResource {
     /**
      * Endpoint permettant de récupurer les informations d'un menu dont l'id est passé en paramètre dans le chemin
      *
-     * @param id id du menu recherché
+     * @param id_menu id du menu recherché
      * @return les informations du menu recherché au format JSON
      */
     @GET
-    @Path("get/{id}")
+    @Path("get/{id_menu}")
     @Produces("application/json")
-    public String getMenu(@PathParam("id") int id) {
+    public String getMenu(@PathParam("id_menu") int id_menu) {
 
-        String result = service.getMenuJSON(id);
+        String result = service.getMenuJSON(id_menu);
 
         // si le menu n'a pas été trouvé
         if (result == null)
@@ -75,17 +75,17 @@ public class MenuResource {
      * Endpoint permettant de mettre à jours un menu
      * (la requête patch doit fournir le nouveau statut sur menu, les autres informations sont ignorées)
      *
-     * @param id   la référence du menu dont il faut changer le statut
+     * @param id_menu   la référence du menu dont il faut changer le statut
      * @param menu le menu transmis en HTTP au format JSON et convertit en objet Menu
      * @return une réponse "updated" si la mise à jour a été effectuée, une erreur NotFound sinon
      */
     @PUT
-    @Path("update/{id}")
+    @Path("update/{id_menu}")
     @Consumes("application/json")
-    public Response updateMenu(@PathParam("id") int id, Menu menu) {
+    public Response updateMenu(@PathParam("id_menu") int id_menu, Menu menu) {
 
         // si le menu n'a pas été trouvé
-        if (!service.updateMenu(id, menu))
+        if (!service.updateMenu(id_menu, menu))
             throw new NotFoundException();
         else
             return Response.ok("Le menu vient d'être mis à jours !").build();
@@ -108,17 +108,35 @@ public class MenuResource {
 
     /**
      * Endpoint permettant la suppression d'un menu
-     * @param id int identifiant du menu à supprimer
+     * @param id_menu int identifiant du menu à supprimer
      * @return une erreur si l'id n'existe pas, un message si ça a bien fonctionnée
      */
     @DELETE
-    @Path("delete/{id}")
-    public Response deleteMenu(@PathParam("id") int id){
-        if(!service.deleteMenu(id)){
+    @Path("delete/{id_menu}")
+    public Response deleteMenu(@PathParam("id_menu") int id_menu){
+        if(!service.deleteMenu(id_menu)){
             throw new NotFoundException();
         } else {
-            return Response.ok("Le menu " + id + " a bien été supprimé !").build();
+            return Response.ok("Le menu " + id_menu + " a bien été supprimé !").build();
         }
+    }
+
+    /**
+     * Endpoint permettant la récupération de tous les plats associés à un menu
+     * @param id_menu int id du menu
+     * @return String chaîne de caractère contenant tous les plats associés à un menu
+     */
+    @GET
+    @Path("/get-all-plat-from-menu/{id_menu}")
+    @Produces("application/json")
+    public String getAllPlatFromMenu(@PathParam("id_menu") int id_menu) {
+        String result = service.getAllPlatFromMenuJson(id_menu);
+
+        if(result == null){
+            throw new NotFoundException();
+        }
+
+        return result;
     }
 
     /**
