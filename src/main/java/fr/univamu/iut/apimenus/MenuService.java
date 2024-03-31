@@ -1,5 +1,6 @@
 package fr.univamu.iut.apimenus;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
@@ -17,27 +18,28 @@ public class MenuService {
 
     /**
      * Constructeur permettant d'injecter l'accès aux données
+     *
      * @param menuRepo objet implémentant l'interface d'accès aux données
      */
-    public MenuService(MenuRepositoryInterface menuRepo) {
+    public @Inject MenuService(MenuRepositoryInterface menuRepo) {
         this.menuRepo = menuRepo;
     }
 
     /**
      * Méthode retournant les informations sur les menus au format JSON
+     *
      * @return une chaîne de caractère contenant les informations au format JSON
      */
-    public String getAllMenusJSON(){
+    public String getAllMenusJSON() {
 
         ArrayList<Menu> allMenus = menuRepo.getAllMenu();
 
         // création du json et conversion de la liste de menus
         String result = null;
-        try( Jsonb jsonb = JsonbBuilder.create()){
+        try (Jsonb jsonb = JsonbBuilder.create()) {
             result = jsonb.toJson(allMenus);
-        }
-        catch (Exception e){
-            System.err.println( e.getMessage() );
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
 
         return result;
@@ -45,15 +47,16 @@ public class MenuService {
 
     /**
      * Méthode retournant au format JSON les informations sur un menu recherché
+     *
      * @param id la référence du menu recherché
      * @return une chaîne de caractère contenant les informations au format JSON
      */
-    public String getMenuJSON(int id){
+    public String getMenuJSON(int id) {
         String result = null;
         Menu myMenu = menuRepo.getMenu(id);
 
         // si le menu a été trouvé
-        if( myMenu != null ) {
+        if (myMenu != null) {
 
             // création du json et conversion du menus
             try (Jsonb jsonb = JsonbBuilder.create()) {
@@ -67,7 +70,8 @@ public class MenuService {
 
     /**
      * Méthode permettant de mettre à jours les informations d'un menu
-     * @param id référence du menu à mettre à jours
+     *
+     * @param id   référence du menu à mettre à jours
      * @param menu les nouvelles informations a utiliser
      * @return true si le menu a pu être mis à jours
      */
@@ -76,7 +80,7 @@ public class MenuService {
     }
 
     public boolean createMenu(String title, String description, float price) {
-        if(menuRepo == null ){
+        if (menuRepo == null) {
             System.err.println("MenuRepositoryInterface n'est pas injecté");
             return false;
         }

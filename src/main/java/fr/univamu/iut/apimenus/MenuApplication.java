@@ -17,7 +17,7 @@ public class MenuApplication extends Application {
      *          pour accéder aux données des menus, voire les modifier
      */
     @Produces
-    public MenuRepositoryInterface openDbConnection(){
+    private MenuRepositoryInterface openDbConnection(){
         MenuRepositoryMariadb db = null;
 
         try{
@@ -33,7 +33,7 @@ public class MenuApplication extends Application {
      * Méthode permettant de fermer la connexion à la base de données lorsque l'application est arrêtée
      * @param menuRepo la connexion à la base de données instanciée dans la méthode @openDbConnection
      */
-    public void closeDbConnection(@Disposes MenuRepositoryInterface menuRepo ) {
+    private void closeDbConnection(@Disposes MenuRepositoryInterface menuRepo ) {
         menuRepo.close();
     }
 
