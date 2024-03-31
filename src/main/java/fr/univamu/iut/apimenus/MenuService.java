@@ -5,6 +5,7 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classe utilisée pour récupérer les informations nécessaires à la ressource
@@ -121,6 +122,16 @@ public class MenuService {
      */
     public boolean addPlatToMenu(int id_menu, int id_plat) {
         return menuRepo.addPlatToMenu(id_menu, id_plat);
+    }
+
+    /**
+     * Méthode permettant d'associer plusieurs plats à un menu
+     * @param id_menu int id du menu
+     * @param listPlatId List<Integer> liste des id des plats à associer au menu
+     * @return true si les associations se sont bien déroulées, false si non
+     */
+    public boolean addAllPlatToMenu(int id_menu, List<Integer> listPlatId){
+        return menuRepo.addAllPlatToMenu(id_menu, listPlatId);
     }
 
     /**

@@ -139,6 +139,23 @@ public class MenuResource {
     }
 
     /**
+     * Endpoint permettant d'associer plusieurs plats à un menu
+     * @param menuListPlatDTO DTO qui contient l'id du menu ainsi qu'une liste d'id de plats
+     * @return Une réponse OK
+     * @throws NotFoundException si le menu est introuvable
+     */
+    @PUT
+    @Path("/add-all-plat-to-menu")
+    @Consumes("application/json")
+    public Response addAllPlatToMenu(MenuListPlatDTO menuListPlatDTO) {
+        if(!service.addAllPlatToMenu(menuListPlatDTO.getId_menu(), menuListPlatDTO.getListPlatId())){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("Ces id viennent d'être associés au plat N°" + menuListPlatDTO.getId_menu() + " !").build();
+        }
+    }
+
+    /**
      * Endpoint permettant de dissocier un plat d'un menu
      * @param id_menu id du menu
      * @param id_plat id du plat à dissocier

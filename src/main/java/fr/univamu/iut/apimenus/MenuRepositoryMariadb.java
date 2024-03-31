@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Classe qui permet d'exécuter les requêtes sql
@@ -245,6 +246,29 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             throw new RuntimeException(e);
         }
 
+        return (nbRowModified != 0);
+    }
+
+    /**
+     * Méthode permettant d'associers plusieurs plats à un menu
+     * @param id_menu int id du menu
+     * @param listPlatId List<Integer> liste des id à associer au menu
+     * @return true si les associations se sont bien déroulées, false si non
+     */
+    @Override
+    public boolean addAllPlatToMenu(int id_menu, List<Integer> listPlatId) {
+        String query = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";
+        int nbRowModified = 0;
+        for(int i = 0; i < listPlatId.size(); ++i){
+            try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+                ps.setInt(1, id_menu);
+                ps.setInt(2, listPlatId.get(i));
+                // exécution de la requête
+                nbRowModified = ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return (nbRowModified != 0);
     }
 

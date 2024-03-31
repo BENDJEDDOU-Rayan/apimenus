@@ -2,6 +2,7 @@ package fr.univamu.iut.apimenus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Interface d'accès aux données des menus
@@ -65,6 +66,8 @@ public interface MenuRepositoryInterface {
      * @return true si l'association s'est bien déroulée, false si non
      */
     boolean addPlatToMenu(int id_menu, int id_plat);
+
+    boolean addAllPlatToMenu(int id_menu, List<Integer> listPlatId);
 
     boolean removePlatFromMenu(int id_menu, int id_plat);
 
