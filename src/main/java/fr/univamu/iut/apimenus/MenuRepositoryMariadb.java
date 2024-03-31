@@ -24,6 +24,9 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         dbConnection = DriverManager.getConnection(infoConnection, user, pwd);
     }
 
+    /**
+     * Méthode void permettant la fermeture de la connection avec la base de données
+     */
     @Override
     public void close() {
         try {
@@ -33,6 +36,11 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         }
     }
 
+    /**
+     * Méthode permettant de récupérer un menu grâce à son id
+     * @param id int id du menu
+     * @return Menu menu trouvé, si non une exception sql
+     */
     @Override
     public Menu getMenu(int id) {
 
@@ -63,6 +71,10 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return selectedMenu;
     }
 
+    /**
+     * Méthode permettant de récupérer tous les menus de la base de données
+     * @return ArrayList<Menu> une arraylist contenant tous les menus trouvés
+     */
     @Override
     public ArrayList<Menu> getAllMenu() {
         ArrayList<Menu> listMenu;
@@ -94,6 +106,14 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return listMenu;
     }
 
+    /**
+     * Méthode permettant de mettre à jours un menu existant
+     * @param id          id de l'objet Menu à mettre à jours
+     * @param title       String nouveau titre
+     * @param description String nouvelle description
+     * @param price       float nouveau prix
+     * @return true si la mise à jours a été faite, false si non
+     */
     @Override
     public boolean updateMenu(int id, String title, String description, float price) {
         String query = "UPDATE Menu SET title=?, description=?, price=?  where id_menu=?";
@@ -115,6 +135,13 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return (nbRowModified != 0);
     }
 
+    /**
+     * Méthode permettant de créer un menu
+     * @param title       String titre du menu à créer
+     * @param description String description du menu à créer
+     * @param price       float prix du menu à créer
+     * @return true si la création s'est bien déroulée, false si non
+     */
     @Override
     public boolean createMenu(String title, String description, float price) {
         String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, ?)";
@@ -135,6 +162,11 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return (nbRowModified != 0);
     }
 
+    /**
+     * Méthode permettant de supprimer un menu de la base de données
+     * @param id int référence du menu à supprimer
+     * @return true si la suppression s'est bien déroulée, false si non
+     */
     @Override
     public boolean deleteMenu(int id) {
         String query = "DELETE FROM Menu WHERE id_menu=?";

@@ -91,6 +91,11 @@ public class MenuResource {
             return Response.ok("Le menu vient d'être mis à jours !").build();
     }
 
+    /**
+     * Endpoint permettant la création d'un menu
+     * @param request DTO contenant le titre, description et prix du menu
+     * @return message d'erreur si la création du menu échoue
+     */
     @PUT
     @Path("/create")
     @Consumes("application/json")
@@ -100,4 +105,20 @@ public class MenuResource {
         else
             return Response.ok("Le menu " + request.getTitle() + " a été crée !").build();
     }
+
+    /**
+     * Endpoint permettant la suppression d'un menu
+     * @param id int identifiant du menu à supprimer
+     * @return une erreur si l'id n'existe pas, un message si ça a bien fonctionnée
+     */
+    @DELETE
+    @Path("delete/{id}")
+    public Response deleteMenu(@PathParam("id") int id){
+        if(!service.deleteMenu(id)){
+            throw new NotFoundException();
+        } else {
+            return Response.ok("Le menu " + id + " a bien été supprimé !").build();
+        }
+    }
+
 }

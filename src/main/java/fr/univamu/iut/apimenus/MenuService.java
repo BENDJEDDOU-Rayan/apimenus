@@ -73,18 +73,30 @@ public class MenuService {
      *
      * @param id   référence du menu à mettre à jours
      * @param menu les nouvelles informations a utiliser
-     * @return true si le menu a pu être mis à jours
+     * @return true si le menu a pu être mis à jours, false si non
      */
     public boolean updateMenu(int id, Menu menu) {
         return menuRepo.updateMenu(id, menu.title, menu.description, menu.price);
     }
 
+    /**
+     * Méthode permettant de créer un nouveau menu
+     * @param title String titre du menu
+     * @param description String description du menu
+     * @param price float prix du menu
+     * @return true si la création s'est bien déroulée, false si non
+     */
     public boolean createMenu(String title, String description, float price) {
-        if (menuRepo == null) {
-            System.err.println("MenuRepositoryInterface n'est pas injecté");
-            return false;
-        }
         return menuRepo.createMenu(title, description, price);
+    }
+
+    /**
+     * Méthode permettant de supprimer un menu
+     * @param id int identifiant du menu à supprimer
+     * @return true si la suppression s'est bien déroulée, false si non
+     */
+    public boolean deleteMenu(int id) {
+        return menuRepo.deleteMenu(id);
     }
 
 
