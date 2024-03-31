@@ -144,6 +144,11 @@ public class MenuService {
         return menuRepo.removePlatFromMenu(id_menu, id_plat);
     }
 
+    /**
+     * Méthode permettant de dissocier tous les plats d'un menu
+     * @param id_menu int id du menu
+     * @return true si les disassociation se sont bien déroulées, false si non
+     */
     public boolean removeAllPlatsFromMenu(int id_menu) {
         return menuRepo.removeAllPlatsFromMenu(id_menu);
     }

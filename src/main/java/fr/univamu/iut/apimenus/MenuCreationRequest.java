@@ -1,7 +1,7 @@
 package fr.univamu.iut.apimenus;
 
 /**
- * Classe qui sert de DTO pour les requêtes
+ * DTO utilisé pour la requête création de menu
  */
 public class MenuCreationRequest {
 

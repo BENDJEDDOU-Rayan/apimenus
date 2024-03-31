@@ -67,9 +67,26 @@ public interface MenuRepositoryInterface {
      */
     boolean addPlatToMenu(int id_menu, int id_plat);
 
+    /**
+     * Méthode qui permet d'associer plusieurs plats à un menu
+     * @param id_menu int id du menu
+     * @param listPlatId List<Integer> liste de plats à associer au menu
+     * @return true si les associations se sont bien déroulées, false si non
+     */
     boolean addAllPlatToMenu(int id_menu, List<Integer> listPlatId);
 
+    /**
+     * Méthode qui permet de supprimer un plat d'un menu
+     * @param id_menu int id du menu
+     * @param id_plat int id du plat
+     * @return true si la suppression s'est bien déroulée, false si non
+     */
     boolean removePlatFromMenu(int id_menu, int id_plat);
 
+    /**
+     * Méthode qui permet de supprimer tous les plats d'un menu
+     * @param id_menu int id du menu
+     * @return true si la suppression s'est bien déroulée, false si non
+     */
     boolean removeAllPlatsFromMenu(int id_menu);
 }

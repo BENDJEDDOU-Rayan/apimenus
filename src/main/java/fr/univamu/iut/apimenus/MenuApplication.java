@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Application;
 
 /**
  * Main de l'api
+ * @author Rayan BENDJEDDOU
  */
 @ApplicationPath("/api")
 @ApplicationScoped
