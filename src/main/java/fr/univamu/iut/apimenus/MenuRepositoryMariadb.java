@@ -3,6 +3,7 @@ package fr.univamu.iut.apimenus;
 import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable {
 
@@ -174,7 +175,88 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
-            ps.setString(1, String.valueOf(id));
+            ps.setInt(1, id);
+
+            // exécution de la requête
+            nbRowModified = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (nbRowModified != 0);
+    }
+
+    @Override
+    public HashMap<Integer, Integer> getAllPlatFromMenu(int id_menu) {
+        HashMap<Integer, Integer> listPlats;
+
+        String query = "SELECT * FROM Plat_menu where id_menu=?";
+
+        // construction et exécution d'une requête préparée
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            // exécution de la requête
+            ResultSet result = ps.executeQuery();
+
+            listPlats = new HashMap<>();
+
+            // récupération du premier (et seul) tuple résultat
+            while (result.next()) {
+                int id = result.getInt("id_menu");
+                int id_plat = result.getInt("id_plat");
+
+                listPlats.put(id, id_plat);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listPlats;
+    }
+
+    @Override
+    public boolean addPlatToMenu(int id_menu, int id_plat) {
+        String query = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";
+        int nbRowModified;
+
+        // construction et exécution d'une requête préparée
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, id_menu);
+            ps.setInt(2, id_plat);
+
+            // exécution de la requête
+            nbRowModified = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (nbRowModified != 0);
+    }
+
+    @Override
+    public boolean removePlatFromMenu(int id_menu, int id_plat) {
+        String query = "DELETE FROM Plat_menu WHERE id_menu=? AND id_plat=?";
+        int nbRowModified;
+
+        // construction et exécution d'une requête préparée
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, id_menu);
+
+            // exécution de la requête
+            nbRowModified = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (nbRowModified != 0);
+    }
+
+    @Override
+    public boolean removeAllPlatsFromMenu(int id_menu) {
+        String query = "DELETE FROM Plat_menu WHERE id_menu=?";
+        int nbRowModified;
+
+        // construction et exécution d'une requête préparée
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, id_menu);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
