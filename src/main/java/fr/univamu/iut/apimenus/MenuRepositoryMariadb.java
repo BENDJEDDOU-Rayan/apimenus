@@ -1,5 +1,11 @@
 package fr.univamu.iut.apimenus;
 
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +21,8 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      * Accès à la base de données (session)
      */
     protected Connection dbConnection;
+
+    private String apiPlatUrl = "http://localhost:8080/APII-1.0-SNAPSHOT/api/";
 
     /**
      * Constructeur de la classe
@@ -244,16 +252,48 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      */
     @Override
     public boolean addPlatToMenu(int id_menu, int id_plat) {
-        String query = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";
+        String queryInitialPrice = "SELECT price FROM Menu where id_menu=?";
+        String queryAddPlat = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";
+        String queryUpdatePrice = "UPDATE Menu SET price=?  where id_menu=?";
+
         int nbRowModified;
+        int nbRowModified2;
+        int nbRowModified3;
+
+        // création d'un client
+        Client client = ClientBuilder.newClient();
+        // définition de l'adresse de la ressource
+        WebTarget apiPlatResource  = client.target(apiPlatUrl);
+        // définition du point d'accès
+        WebTarget apiPlatEndpoint = apiPlatResource.path("price/" + id_plat);
+        // envoi de la requête et récupération de la réponse
+        Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
+        MenuUpdatePriceDTO parsedPlatPrice = response.readEntity(MenuUpdatePriceDTO.class);
+        float parsedMenuPrice = 0;
+
+        client.close();
 
         // construction et exécution d'une requête préparée
-        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
-            ps.setInt(1, id_menu);
-            ps.setInt(2, id_plat);
+        try (PreparedStatement psAddPlat = dbConnection.prepareStatement(queryAddPlat);
+            PreparedStatement psInitialPrice = dbConnection.prepareStatement(queryInitialPrice);
+            PreparedStatement psUpdatePrice = dbConnection.prepareStatement(queryUpdatePrice)) {
+            psAddPlat.setInt(1, id_menu);
+            psAddPlat.setInt(2, id_plat);
 
-            // exécution de la requête
-            nbRowModified = ps.executeUpdate();
+            // exécution de la requête qui associe le plat au menu
+            nbRowModified = psAddPlat.executeUpdate();
+
+            psInitialPrice.setInt(1, id_menu);
+            // exécution de la requête qui récupère le prix initial du menu
+            ResultSet rs = psInitialPrice.executeQuery();
+            if(rs.next()){
+                parsedMenuPrice = rs.getFloat("price");
+            }
+
+            psUpdatePrice.setFloat(1, parsedMenuPrice + parsedPlatPrice.getPrice());
+            psUpdatePrice.setInt(2, id_menu);
+            // exécution de la requête qui récupère le prix initial du menu
+            psUpdatePrice.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
