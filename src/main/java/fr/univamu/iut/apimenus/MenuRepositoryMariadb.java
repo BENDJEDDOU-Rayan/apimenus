@@ -160,17 +160,32 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      */
     @Override
     public boolean createMenu(String title, String description, List<Integer> listPlat) {
-        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, 0) OUTPUT Inserted.id_plat";
-        String getIdQuery = "SELECT * FROM Menu where id_menu= SCOPE_IDENTITY()";
+        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, 0)";
+        int createdIdMenu = 0;
         int nbRowModified;
 
         // construction et exécution d'une requête préparée
-        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, title);
             ps.setString(2, description);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if(rs.next()){
+                    createdIdMenu = rs.getInt(1);
+                }
+            }
+
+            if(listPlat.size() > 1) {
+                for (Integer integer : listPlat) {
+                    addPlatToMenu(createdIdMenu, integer);
+                }
+            } else {
+                addPlatToMenu(createdIdMenu, listPlat.get(0));
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -308,6 +323,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
     @Override
     public boolean addAllPlatToMenu(int id_menu, List<Integer> listPlatId) {
         String query = "INSERT INTO Plat_menu (id_menu, id_plat) VALUES (?, ?)";
+
         int nbRowModified = 0;
         for(int i = 0; i < listPlatId.size(); ++i){
             try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
@@ -332,15 +348,45 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
     @Override
     public boolean removePlatFromMenu(int id_menu, int id_plat) {
         String query = "DELETE FROM Plat_menu WHERE id_menu=? AND id_plat=?";
+        String queryInitialPrice = "SELECT price FROM Menu where id_menu=?";
+        String queryUpdatePrice = "UPDATE Menu SET price=?  where id_menu=?";
+
         int nbRowModified;
+        int nbRowModified2;
+
+        // création d'un client
+        Client client = ClientBuilder.newClient();
+        // définition de l'adresse de la ressource
+        WebTarget apiPlatResource  = client.target(apiPlatUrl);
+        // définition du point d'accès
+        WebTarget apiPlatEndpoint = apiPlatResource.path("plats/price/" + id_plat);
+        // envoi de la requête et récupération de la réponse
+        Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
+        MenuUpdatePriceDTO parsedPlatPrice = response.readEntity(MenuUpdatePriceDTO.class);
+        float parsedMenuPrice = 0;
+        client.close();
 
         // construction et exécution d'une requête préparée
-        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(query);
+        PreparedStatement psInitialPrice = dbConnection.prepareStatement(queryInitialPrice);
+        PreparedStatement psUpdatePrice = dbConnection.prepareStatement(queryUpdatePrice)) {
             ps.setInt(1, id_menu);
             ps.setInt(2, id_plat);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
+
+            psInitialPrice.setInt(1, id_menu);
+            // exécution de la requête qui récupère le prix initial du menu
+            ResultSet rs = psInitialPrice.executeQuery();
+            if(rs.next()){
+                parsedMenuPrice = rs.getFloat("price");
+            }
+
+            psUpdatePrice.setFloat(1, parsedMenuPrice - parsedPlatPrice.getPrice());
+            psUpdatePrice.setInt(2, id_menu);
+            // exécution de la requête qui récupère le prix initial du menu
+            nbRowModified2 = psUpdatePrice.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -362,6 +408,9 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, id_menu);
+
+
+
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();

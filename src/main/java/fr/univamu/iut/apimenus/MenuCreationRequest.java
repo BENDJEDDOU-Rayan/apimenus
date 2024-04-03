@@ -67,7 +67,7 @@ public class MenuCreationRequest {
      *
      * @param listPlat float prix du menu à définir
      */
-    public void setPrice(List<Integer> listPlat) {
+    public void setListPlat(List<Integer> listPlat) {
         this.listPlat = listPlat;
     }
 }

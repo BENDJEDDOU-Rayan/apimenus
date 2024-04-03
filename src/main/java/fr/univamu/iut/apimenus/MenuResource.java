@@ -96,7 +96,7 @@ public class MenuResource {
      * @param request DTO contenant le titre, description et prix du menu
      * @return message d'erreur si la création du menu échoue
      */
-    @PUT
+    @POST
     @Path("/create")
     @Consumes("application/json")
     public Response createMenu(MenuCreationRequest request) {
