@@ -326,16 +326,11 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         int nbRowModified = 0;
         for(int i = 0; i < listPlatId.size(); ++i){
-            try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
-                ps.setInt(1, id_menu);
-                ps.setInt(2, listPlatId.get(i));
-                // exécution de la requête
-                nbRowModified = ps.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            if(!addPlatToMenu(id_menu, listPlatId.get(i))){
+                return false;
             }
         }
-        return (nbRowModified != 0);
+        return true;
     }
 
     /**
@@ -403,21 +398,25 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
     @Override
     public boolean removeAllPlatsFromMenu(int id_menu) {
         String query = "DELETE FROM Plat_menu WHERE id_menu=?";
+        String queryUpdatePrice = "UPDATE Menu SET price=0  where id_menu=?";
         int nbRowModified;
+        int nbRowModified2;
 
         // construction et exécution d'une requête préparée
-        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(query);
+        PreparedStatement psUpdatPrice = dbConnection.prepareStatement(queryUpdatePrice)) {
             ps.setInt(1, id_menu);
-
-
-
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
+
+            psUpdatPrice.setInt(1, id_menu);
+            // exécution de la requête qui réinitialise le prix
+            nbRowModified2 = psUpdatPrice.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return (nbRowModified != 0);
+        return (nbRowModified != 0 && nbRowModified2 != 0);
     }
 }

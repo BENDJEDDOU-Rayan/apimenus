@@ -73,7 +73,6 @@ public class MenuResource {
 
     /**
      * Endpoint permettant de mettre à jours un menu
-     * (la requête patch doit fournir le nouveau statut sur menu, les autres informations sont ignorées)
      *
      * @param id_menu   la référence du menu dont il faut changer le statut
      * @param menu le menu transmis en HTTP au format JSON et convertit en objet Menu
@@ -145,7 +144,7 @@ public class MenuResource {
      * @return Une réponse OK
      * @throws NotFoundException si menu introuvable
      */
-    @PUT
+    @POST
     @Path("/add-plat-to-menu")
     @Consumes("application/json")
     public Response addPlatToMenu(MenuPlatDTO menuPlatDTO) {
@@ -162,7 +161,7 @@ public class MenuResource {
      * @return Une réponse OK
      * @throws NotFoundException si le menu est introuvable
      */
-    @PUT
+    @POST
     @Path("/add-all-plat-to-menu")
     @Consumes("application/json")
     public Response addAllPlatToMenu(MenuListPlatDTO menuListPlatDTO) {
