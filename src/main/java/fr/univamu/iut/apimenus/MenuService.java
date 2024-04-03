@@ -98,11 +98,11 @@ public class MenuService {
      * Méthode permettant de créer un nouveau menu
      * @param title String titre du menu
      * @param description String description du menu
-     * @param price float prix du menu
+     * @param listPlat list de plats à associer
      * @return true si la création s'est bien déroulée, false si non
      */
-    public boolean createMenu(String title, String description, float price) {
-        return menuRepo.createMenu(title, description, price);
+    public boolean createMenu(String title, String description, List<Integer> listPlat) {
+        return menuRepo.createMenu(title, description, listPlat);
     }
 
     /**

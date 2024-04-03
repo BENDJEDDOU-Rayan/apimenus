@@ -155,20 +155,19 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      * Méthode permettant de créer un menu
      * @param title       String titre du menu à créer
      * @param description String description du menu à créer
-     * @param price       float prix du menu à créer
      * @return true si la création s'est bien déroulée, false si non
      * @throws RuntimeException si il y a une erreur côté sql
      */
     @Override
-    public boolean createMenu(String title, String description, float price) {
-        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, ?)";
+    public boolean createMenu(String title, String description, List<Integer> listPlat) {
+        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, 0) OUTPUT Inserted.id_plat";
+        String getIdQuery = "SELECT * FROM Menu where id_menu= SCOPE_IDENTITY()";
         int nbRowModified;
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setString(1, title);
             ps.setString(2, description);
-            ps.setFloat(3, price);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
@@ -258,19 +257,17 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         int nbRowModified;
         int nbRowModified2;
-        int nbRowModified3;
 
         // création d'un client
         Client client = ClientBuilder.newClient();
         // définition de l'adresse de la ressource
         WebTarget apiPlatResource  = client.target(apiPlatUrl);
         // définition du point d'accès
-        WebTarget apiPlatEndpoint = apiPlatResource.path("price/" + id_plat);
+        WebTarget apiPlatEndpoint = apiPlatResource.path("plats/price/" + id_plat);
         // envoi de la requête et récupération de la réponse
         Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
         MenuUpdatePriceDTO parsedPlatPrice = response.readEntity(MenuUpdatePriceDTO.class);
         float parsedMenuPrice = 0;
-
         client.close();
 
         // construction et exécution d'une requête préparée
@@ -293,12 +290,12 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             psUpdatePrice.setFloat(1, parsedMenuPrice + parsedPlatPrice.getPrice());
             psUpdatePrice.setInt(2, id_menu);
             // exécution de la requête qui récupère le prix initial du menu
-            psUpdatePrice.executeUpdate();
+            nbRowModified2 = psUpdatePrice.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return (nbRowModified != 0);
+        return (nbRowModified != 0 && nbRowModified2 != 0);
     }
 
     /**

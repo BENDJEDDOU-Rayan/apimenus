@@ -1,5 +1,7 @@
 package fr.univamu.iut.apimenus;
 
+import java.util.List;
+
 /**
  * DTO utilisé pour la requête création de menu
  */
@@ -7,7 +9,7 @@ public class MenuCreationRequest {
 
     private String title;
     private String description;
-    private float price;
+    private List<Integer> listPlat;
 
     /**
      * Constructeur par défaut
@@ -54,18 +56,18 @@ public class MenuCreationRequest {
     /**
      * Méthode qui permet d'avoir le prix du menu
      *
-     * @return float prix du menu
+     * @return List<Integer> liste de plats à associer au menu
      */
-    public float getPrice() {
-        return price;
+    public List<Integer> getListPlat() {
+        return listPlat;
     }
 
     /**
      * Méthode qui permet de définir le prix du menu
      *
-     * @param price float prix du menu à définir
+     * @param listPlat float prix du menu à définir
      */
-    public void setPrice(float price) {
-        this.price = price;
+    public void setPrice(List<Integer> listPlat) {
+        this.listPlat = listPlat;
     }
 }

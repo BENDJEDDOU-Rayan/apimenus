@@ -100,7 +100,7 @@ public class MenuResource {
     @Path("/create")
     @Consumes("application/json")
     public Response createMenu(MenuCreationRequest request) {
-        if (!service.createMenu(request.getTitle(), request.getDescription(), request.getPrice()))
+        if (!service.createMenu(request.getTitle(), request.getDescription(), request.getListPlat()))
             return Response.ok("Une erreur est survenue lors de la création du menu " + request.getTitle() + " !").build();
         else
             return Response.ok("Le menu " + request.getTitle() + " a été crée !").build();

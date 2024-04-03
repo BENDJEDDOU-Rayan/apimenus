@@ -44,10 +44,10 @@ public interface MenuRepositoryInterface {
      *
      * @param title       String titre du menu à créer
      * @param description String description du menu à créer
-     * @param price       float prix du menu à créer
+     * @param listPlat    List<Integer> list de plats à associer
      * @return true si le menu a été crée, false sinon
      */
-    boolean createMenu(String title, String description, float price);
+    boolean createMenu(String title, String description, List<Integer> listPlat);
 
     /**
      * Méthode qui permet de supprimer un menu en passant l'id en paramètre
