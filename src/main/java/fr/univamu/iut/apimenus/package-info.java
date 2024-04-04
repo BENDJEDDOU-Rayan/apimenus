@@ -1,4 +1,4 @@
 /**
- * Package principal contenant les classes constituants l'api
+ * Package principal contenant les classes constituants l'api.
  */
 package fr.univamu.iut.apimenus;
