@@ -158,4 +158,11 @@ public class Menu {
     public void setListPlat(List<PlatDTO> listPlat) {
         this.listPlat = listPlat;
     }
+
+    @Override
+    public String toString() {
+        return "Menu[id=" + id + ", author=" + author + ", title=" + title +
+                ", description=" + description + ", price=" + price + ", creationDate=" + creationDate
+                + ", listPlat=" + listPlat + "]";
+    }
 }
