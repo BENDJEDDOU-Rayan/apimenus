@@ -75,18 +75,34 @@ public class MenuCreationRequest {
         this.listPlat = listPlat;
     }
 
+    /**
+     * Méthode permettant de récupérer l'auteur du menu
+     * @return String auteur du menu
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Méthode qui définit l'auteur d'un menu
+     * @param author String auteur à définir
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * Méthode qui récupère la date et heure de création du menu
+     * @return Timestamp date et heure de création du menu
+     */
     public Timestamp getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * Méthode qui définit la date et heure de la création du menu
+     * @param creationDate Timestamp nouvelle date et heure
+     */
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }

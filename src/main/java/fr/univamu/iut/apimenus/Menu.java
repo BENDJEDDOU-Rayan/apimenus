@@ -1,9 +1,6 @@
 package fr.univamu.iut.apimenus;
 
-import com.sun.jna.platform.win32.Sspi;
-
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,26 +109,50 @@ public class Menu {
         this.price = price;
     }
 
+    /**
+     * Méthode qui permet de récupérer l'auteur du menu
+     * @return String auteur du menu
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Méthode qui permet de définir l'auteur du menu
+     * @param author String nouveau auteur
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * Méthode qui récupère date et heure de la création du menu
+     * @return Timestamp date et heure de la création du menu
+     */
     public Timestamp getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * Méthode qui définit la date et heure de la création du menu
+     * @param creationDate Timestamp nouvelle date et heure
+     */
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
+    /**
+     * Méthode qui retourne la liste de plats associés au menu
+     * @return List<PlatDTO> un plat est représenté par un DTO
+     */
     public List<PlatDTO> getListPlat() {
         return listPlat;
     }
 
+    /**
+     * Méthode qui permet de définir la liste de plats associés au menu
+     * @param listPlat List<PlatDTO> un plat est représenté par un DTO
+     */
     public void setListPlat(List<PlatDTO> listPlat) {
         this.listPlat = listPlat;
     }

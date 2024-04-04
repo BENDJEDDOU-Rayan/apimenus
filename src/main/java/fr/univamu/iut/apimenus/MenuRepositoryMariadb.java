@@ -8,9 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.Closeable;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -90,6 +88,12 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         return selectedMenu;
     }
 
+    /**
+     * Méthode qui permet de récupérer les plats d'un menu à partir de l'api plats & utilisateurs.
+     * Les plats sont récupérés à travers des DTO.
+     * @param id_menu id du menu
+     * @return ArrayList<DTO> ArrayList contenant tous les plats
+     */
     public ArrayList<PlatDTO> fetchPlatDTOFromApi(int id_menu) {
         String getAllPlatQuery = "SELECT id_plat FROM Plat_menu where id_menu=?";
         ArrayList<PlatDTO> listMenuPlatDTO = new ArrayList<>();
@@ -318,6 +322,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         WebTarget apiPlatEndpoint = apiPlatResource.path("plats/price/" + id_plat);
         // envoi de la requête et récupération de la réponse
         Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
+        // transformation de la réponse en un DTO utilisable dans le code
         MenuUpdatePriceDTO parsedPlatPrice = response.readEntity(MenuUpdatePriceDTO.class);
         float parsedMenuPrice = 0;
         client.close();

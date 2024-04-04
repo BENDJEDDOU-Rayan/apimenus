@@ -69,6 +69,11 @@ public class MenuService {
         return result;
     }
 
+    /**
+     * Méthode retournant au format JSON les informations sur plusieurs plats
+     * @param id_menu id du menu
+     * @return ArrayList<MenuPlatDTO> arraylist qui contient les DTO des plats
+     */
     public String getAllPlatFromMenuJson(int id_menu) {
         ArrayList<MenuPlatDTO> listPlatDTO = menuRepo.getAllPlatFromMenu(id_menu);
 

@@ -1,7 +1,6 @@
 package fr.univamu.iut.apimenus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,6 +56,11 @@ public interface MenuRepositoryInterface {
      */
     boolean deleteMenu(int id_menu);
 
+    /**
+     * ArrayList contenant les plats associés à un menu
+     * @param id_menu id du menu cible
+     * @return une arraylist contenant les plats associés à un menu
+     */
     ArrayList<MenuPlatDTO> getAllPlatFromMenu(int id_menu);
 
     /**
