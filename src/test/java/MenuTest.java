@@ -53,4 +53,10 @@ public class MenuTest {
         menu.setPrice(9.99f);
         Assert.assertEquals(9.99f, menu.getPrice(), 0.0f);
     }
+
+    @Test
+    public void testSetAuthor() {
+        menu.setAuthor("Mathias");
+        Assert.assertEquals("Mathias", menu.getAuthor());
+    }
 }
