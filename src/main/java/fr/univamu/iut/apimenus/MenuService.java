@@ -1,5 +1,6 @@
 package fr.univamu.iut.apimenus;
 
+import fr.univamu.iut.apimenus.dto.MenuPlatDTO;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;

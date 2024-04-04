@@ -1,5 +1,8 @@
 package fr.univamu.iut.apimenus;
 
+import fr.univamu.iut.apimenus.dto.MenuPlatDTO;
+import fr.univamu.iut.apimenus.dto.MenuUpdatePriceDTO;
+import fr.univamu.iut.apimenus.dto.PlatDTO;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;

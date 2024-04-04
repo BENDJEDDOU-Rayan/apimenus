@@ -1,4 +1,4 @@
-package fr.univamu.iut.apimenus;
+package fr.univamu.iut.apimenus.dto;
 
 import java.sql.Timestamp;
 import java.util.List;

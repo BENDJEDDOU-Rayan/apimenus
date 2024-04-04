@@ -1,5 +1,7 @@
 package fr.univamu.iut.apimenus;
 
+import fr.univamu.iut.apimenus.dto.MenuPlatDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 

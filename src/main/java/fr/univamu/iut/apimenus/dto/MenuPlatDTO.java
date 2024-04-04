@@ -1,4 +1,4 @@
-package fr.univamu.iut.apimenus;
+package fr.univamu.iut.apimenus.dto;
 
 /**
  * DTO servant à associer un plat à un menu

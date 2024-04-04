@@ -1,4 +1,4 @@
-package fr.univamu.iut.apimenus;
+package fr.univamu.iut.apimenus.dto;
 
 /**
  * DTO Servant à fetch un plat depuis l'api plats & utilisateurs

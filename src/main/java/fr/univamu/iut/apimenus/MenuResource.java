@@ -1,5 +1,8 @@
 package fr.univamu.iut.apimenus;
 
+import fr.univamu.iut.apimenus.dto.MenuCreationRequest;
+import fr.univamu.iut.apimenus.dto.MenuListPlatDTO;
+import fr.univamu.iut.apimenus.dto.MenuPlatDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
