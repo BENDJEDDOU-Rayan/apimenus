@@ -71,7 +71,7 @@ public class MenuResource {
 
         // si le menu n'a pas été trouvé
         if (result == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
 
         return result;
     }
@@ -90,7 +90,7 @@ public class MenuResource {
 
         // si le menu n'a pas été trouvé
         if (!service.updateMenu(id_menu, menu))
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         else
             return Response.ok("Le menu vient d'être mis à jours !").build();
     }
@@ -119,7 +119,7 @@ public class MenuResource {
     @Path("delete/{id_menu}")
     public Response deleteMenu(@PathParam("id_menu") int id_menu){
         if(!service.deleteMenu(id_menu)){
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         } else {
             return Response.ok("Le menu " + id_menu + " a bien été supprimé !").build();
         }
@@ -137,7 +137,7 @@ public class MenuResource {
         String result = service.getAllPlatFromMenuJson(id_menu);
 
         if(result == null){
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         }
 
         return result;
@@ -154,7 +154,7 @@ public class MenuResource {
     @Consumes("application/json")
     public Response addPlatToMenu(MenuPlatDTO menuPlatDTO) {
         if(!service.addPlatToMenu(menuPlatDTO.getId_menu(), menuPlatDTO.getId_plat())) {
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         } else {
             return Response.ok("Le plat N°" + menuPlatDTO.getId_plat() + " a bien été ajouté au menu N°" + menuPlatDTO.getId_menu()).build();
         }
@@ -171,7 +171,7 @@ public class MenuResource {
     @Consumes("application/json")
     public Response addAllPlatToMenu(MenuListPlatDTO menuListPlatDTO) {
         if(!service.addAllPlatToMenu(menuListPlatDTO.getId_menu(), menuListPlatDTO.getListPlatId())){
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         } else {
             return Response.ok("Ces id viennent d'être associés au plat N°" + menuListPlatDTO.getId_menu() + " !").build();
         }
@@ -188,7 +188,7 @@ public class MenuResource {
     @Path("/remove-plat-from-menu/{id_menu}/{id_plat}")
     public Response removePlatFromMenu(@PathParam("id_menu") int id_menu, @PathParam("id_plat") int id_plat) {
         if(!service.removePlatFromMenu(id_menu, id_plat)) {
-            throw new NotFoundException();
+            throw new NotFoundException("Menu introuvable");
         } else {
             return Response.ok("Le plat N°" + id_plat + " a bien été supprimé du menu N°" + id_menu).build();
         }

@@ -74,13 +74,14 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             // récupération du premier (et seul) tuple résultat
             // (si la référence du menu est valide)
             if (result.next()) {
+                /* Récupération des attributs dans les variables appropriées*/
                 String author = result.getString("author");
                 String title = result.getString("title");
                 String description = result.getString("description");
                 float price = result.getFloat("price");
                 Timestamp creationDate = result.getTimestamp("creationDate");
 
-                // création et initialisation de l'objet Menu
+                // création et initialisation de l'objet Menu avec les variables
                 selectedMenu = new Menu(id, author, title, description, price, creationDate);
                 ArrayList<PlatDTO> listPlat = fetchPlatDTOFromApi(selectedMenu.id);
                 selectedMenu.setListPlat(listPlat);
@@ -105,9 +106,16 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             ps.setInt(1, id_menu);
             ResultSet listPlatId = ps.executeQuery();
 
+            // Création du client
             Client client = ClientBuilder.newClient();
             WebTarget apiPlatResource  = client.target(apiPlatUrl);
 
+            /*
+            * Tant que il y a des id de plats,
+            * On va récupérer les informations sur ces plats
+            * grâce à l'api plats & utilisateurs et on va
+            * stocker ces informations sur un DTO
+            */
             while (listPlatId.next()){
                 int idPlat = listPlatId.getInt("id_plat");
                 WebTarget apiPlatEndpoint = apiPlatResource.path("plats/" + idPlat);
@@ -179,6 +187,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            // Définition des paramètres de la requête SQL
             ps.setString(1, author);
             ps.setString(2, title);
             ps.setString(3, description);
@@ -209,6 +218,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            // Définition des paramètres de la requête SQL
             ps.setString(1, author);
             ps.setString(2, title);
             ps.setString(3, description);
@@ -250,6 +260,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            // Définition du paramètre de la requête SQL
             ps.setInt(1, id);
 
             // exécution de la requête
@@ -275,6 +286,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            // Définition du paramètre de la requête SQL
             ps.setInt(1, id_menu);
 
 
@@ -334,6 +346,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         try (PreparedStatement psAddPlat = dbConnection.prepareStatement(queryAddPlat);
             PreparedStatement psInitialPrice = dbConnection.prepareStatement(queryInitialPrice);
             PreparedStatement psUpdatePrice = dbConnection.prepareStatement(queryUpdatePrice)) {
+            // Définition des paramètres de la requête SQL
             psAddPlat.setInt(1, id_menu);
             psAddPlat.setInt(2, id_plat);
 
@@ -347,6 +360,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
                 parsedMenuPrice = rs.getFloat("price");
             }
 
+            // Définition des paramètres de la requête SQL avec le nouveau prix
             psUpdatePrice.setFloat(1, parsedMenuPrice + parsedPlatPrice.getPrice());
             psUpdatePrice.setInt(2, id_menu);
             // exécution de la requête qui récupère le prix initial du menu
@@ -402,6 +416,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         WebTarget apiPlatEndpoint = apiPlatResource.path("plats/price/" + id_plat);
         // envoi de la requête et récupération de la réponse
         Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
+        // Transférer les informations récupérées dans un DTO
         MenuUpdatePriceDTO parsedPlatPrice = response.readEntity(MenuUpdatePriceDTO.class);
         float parsedMenuPrice = 0;
         client.close();
@@ -410,6 +425,7 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
         try (PreparedStatement ps = dbConnection.prepareStatement(query);
         PreparedStatement psInitialPrice = dbConnection.prepareStatement(queryInitialPrice);
         PreparedStatement psUpdatePrice = dbConnection.prepareStatement(queryUpdatePrice)) {
+            // Définition des paramètres de la requête SQL
             ps.setInt(1, id_menu);
             ps.setInt(2, id_plat);
 
