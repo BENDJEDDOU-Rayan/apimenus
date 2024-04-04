@@ -1,3 +1,4 @@
+### ⚠️ A besoin de l'api plats & utilisateurs pour fonctionner correctement !
 API qui gère les menus pour une application de livraison de repas (BUT Info. 2ème année)
 
 ## Liste des endpoints disponibles 
