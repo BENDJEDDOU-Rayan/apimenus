@@ -52,7 +52,7 @@ public class MenuResource {
     }
 
     /**
-     * Endpoint permettant de récupurer les informations d'un menu dont l'id est passé en paramètre dans le chemin
+     * Endpoint permettant de récupérer les informations d'un menu dont l'id est passé en paramètre dans le chemin
      *
      * @param id_menu id du menu recherché
      * @return les informations du menu recherché au format JSON
@@ -63,6 +63,8 @@ public class MenuResource {
     public String getMenu(@PathParam("id_menu") int id_menu) {
 
         String result = service.getMenuJSON(id_menu);
+
+
 
         // si le menu n'a pas été trouvé
         if (result == null)
@@ -78,7 +80,7 @@ public class MenuResource {
      * @param menu le menu transmis en HTTP au format JSON et convertit en objet Menu
      * @return une réponse "updated" si la mise à jour a été effectuée, une erreur NotFound sinon
      */
-    @PUT
+    @PATCH
     @Path("update/{id_menu}")
     @Consumes("application/json")
     public Response updateMenu(@PathParam("id_menu") int id_menu, Menu menu) {
@@ -99,7 +101,7 @@ public class MenuResource {
     @Path("/create")
     @Consumes("application/json")
     public Response createMenu(MenuCreationRequest request) {
-        if (!service.createMenu(request.getTitle(), request.getDescription(), request.getListPlat()))
+        if (!service.createMenu(request.getAuthor(), request.getTitle(), request.getDescription(), request.getListPlat()))
             return Response.ok("Une erreur est survenue lors de la création du menu " + request.getTitle() + " !").build();
         else
             return Response.ok("Le menu " + request.getTitle() + " a été crée !").build();

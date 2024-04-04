@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.Closeable;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,17 +73,49 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             // récupération du premier (et seul) tuple résultat
             // (si la référence du menu est valide)
             if (result.next()) {
+                String author = result.getString("author");
                 String title = result.getString("title");
                 String description = result.getString("description");
                 float price = result.getFloat("price");
+                Timestamp creationDate = result.getTimestamp("creationDate");
 
                 // création et initialisation de l'objet Menu
-                selectedMenu = new Menu(id, title, description, price);
+                selectedMenu = new Menu(id, author, title, description, price, creationDate);
+                ArrayList<PlatDTO> listPlat = fetchPlatDTOFromApi(selectedMenu.id);
+                selectedMenu.setListPlat(listPlat);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return selectedMenu;
+    }
+
+    public ArrayList<PlatDTO> fetchPlatDTOFromApi(int id_menu) {
+        String getAllPlatQuery = "SELECT id_plat FROM Plat_menu where id_menu=?";
+        ArrayList<PlatDTO> listMenuPlatDTO = new ArrayList<>();
+        int nbRowModified;
+        try(PreparedStatement ps = dbConnection.prepareStatement(getAllPlatQuery)) {
+            ps.setInt(1, id_menu);
+            ResultSet listPlatId = ps.executeQuery();
+
+            Client client = ClientBuilder.newClient();
+            WebTarget apiPlatResource  = client.target(apiPlatUrl);
+
+            while (listPlatId.next()){
+                int idPlat = listPlatId.getInt("id_plat");
+                WebTarget apiPlatEndpoint = apiPlatResource.path("plats/" + idPlat);
+                Response response = apiPlatEndpoint.request(MediaType.APPLICATION_JSON).get();
+                if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                    PlatDTO platDTO = response.readEntity(PlatDTO.class);
+                    listMenuPlatDTO.add(platDTO);
+                }
+            }
+            client.close();
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        return listMenuPlatDTO;
     }
 
     /**
@@ -106,13 +139,15 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
             // récupération du premier (et seul) tuple résultat
             while (result.next()) {
                 int id = result.getInt("id_menu");
+                String author = result.getString("author");
                 String title = result.getString("title");
                 String description = result.getString("description");
                 float price = result.getFloat("price");
+                Timestamp creationDate = result.getTimestamp("creationDate");
 
                 // création du menu courant
-                Menu currentMenu = new Menu(id, title, description, price);
-
+                Menu currentMenu = new Menu(id, author, title, description, price, creationDate);
+                currentMenu.setListPlat(fetchPlatDTOFromApi(id));
                 listMenu.add(currentMenu);
             }
         } catch (SQLException e) {
@@ -131,16 +166,17 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      * @throws RuntimeException si il y a une erreur côté sql
      */
     @Override
-    public boolean updateMenu(int id, String title, String description, float price) {
-        String query = "UPDATE Menu SET title=?, description=?, price=?  where id_menu=?";
+    public boolean updateMenu(int id, String author, String title, String description, float price) {
+        String query = "UPDATE Menu SET author=?, title=?, description=?, price=?  where id_menu=?";
         int nbRowModified;
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
-            ps.setString(1, title);
-            ps.setString(2, description);
-            ps.setFloat(3, price);
-            ps.setInt(4, id);
+            ps.setString(1, author);
+            ps.setString(2, title);
+            ps.setString(3, description);
+            ps.setFloat(4, price);
+            ps.setInt(5, id);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
@@ -159,15 +195,16 @@ public class MenuRepositoryMariadb implements MenuRepositoryInterface, Closeable
      * @throws RuntimeException si il y a une erreur côté sql
      */
     @Override
-    public boolean createMenu(String title, String description, List<Integer> listPlat) {
-        String query = "INSERT INTO Menu (title, description, price) VALUES (?, ?, 0)";
+    public boolean createMenu(String author, String title, String description, List<Integer> listPlat) {
+        String query = "INSERT INTO Menu (author, title, description, price) VALUES (?, ?, ?, 0)";
         int createdIdMenu = 0;
         int nbRowModified;
 
         // construction et exécution d'une requête préparée
         try (PreparedStatement ps = dbConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, title);
-            ps.setString(2, description);
+            ps.setString(1, author);
+            ps.setString(2, title);
+            ps.setString(3, description);
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();

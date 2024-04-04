@@ -1,5 +1,6 @@
 package fr.univamu.iut.apimenus;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -7,9 +8,12 @@ import java.util.List;
  */
 public class MenuCreationRequest {
 
+    private String author;
     private String title;
     private String description;
     private List<Integer> listPlat;
+
+    private Timestamp creationDate;
 
     /**
      * Constructeur par défaut
@@ -69,5 +73,21 @@ public class MenuCreationRequest {
      */
     public void setListPlat(List<Integer> listPlat) {
         this.listPlat = listPlat;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
     }
 }

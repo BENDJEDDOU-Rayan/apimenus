@@ -1,14 +1,24 @@
 package fr.univamu.iut.apimenus;
 
+import com.sun.jna.platform.win32.Sspi;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe représentant un menu
  */
 public class Menu {
 
     protected int id;
+    protected String author;
     protected String title;
     protected String description;
     protected float price;
+    protected Timestamp creationDate;
+    protected List<PlatDTO> listPlat = new ArrayList<>();
 
     /**
      * Constructeur de l'objet Menu
@@ -18,11 +28,13 @@ public class Menu {
      * @param description String description du menu
      * @param price       float prix du menu
      */
-    public Menu(int id, String title, String description, float price) {
+    public Menu(int id, String author, String title, String description, float price, Timestamp creationDate) {
         this.id = id;
+        this.author = author;
         this.title = title;
         this.description = description;
         this.price = price;
+        this.creationDate = creationDate;
     }
 
     public Menu() {
@@ -98,5 +110,29 @@ public class Menu {
      */
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public List<PlatDTO> getListPlat() {
+        return listPlat;
+    }
+
+    public void setListPlat(List<PlatDTO> listPlat) {
+        this.listPlat = listPlat;
     }
 }

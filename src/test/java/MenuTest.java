@@ -4,13 +4,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 
+import java.sql.Timestamp;
+
 public class MenuTest {
 
     private static Menu menu;
 
     @BeforeClass
     public static void setUp() {
-        menu = new Menu(1, "Menu pizza", "Pizza 4 fromages", 8.99f);
+        menu = new Menu(1, "Rayan", "Menu pizza", "Pizza 4 fromages", 8.99f, new Timestamp(System.currentTimeMillis()));
     }
 
     @Test

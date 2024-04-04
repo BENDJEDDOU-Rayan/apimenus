@@ -91,7 +91,7 @@ public class MenuService {
      * @return true si le menu a pu être mis à jours, false si non
      */
     public boolean updateMenu(int id, Menu menu) {
-        return menuRepo.updateMenu(id, menu.title, menu.description, menu.price);
+        return menuRepo.updateMenu(id, menu.author, menu.title, menu.description, menu.price);
     }
 
     /**
@@ -101,8 +101,8 @@ public class MenuService {
      * @param listPlat list de plats à associer
      * @return true si la création s'est bien déroulée, false si non
      */
-    public boolean createMenu(String title, String description, List<Integer> listPlat) {
-        return menuRepo.createMenu(title, description, listPlat);
+    public boolean createMenu(String author, String title, String description, List<Integer> listPlat) {
+        return menuRepo.createMenu(author, title, description, listPlat);
     }
 
     /**

@@ -37,7 +37,7 @@ public interface MenuRepositoryInterface {
      * @param price       float nouveau prix
      * @return true si le menu existe et la mise à jours a été faite, false sinon
      */
-    boolean updateMenu(int id_menu, String title, String description, float price);
+    boolean updateMenu(int id_menu, String author, String title, String description, float price);
 
     /**
      * Méthode qui permet de créer un objet Menu
@@ -47,7 +47,7 @@ public interface MenuRepositoryInterface {
      * @param listPlat    List<Integer> list de plats à associer
      * @return true si le menu a été crée, false sinon
      */
-    boolean createMenu(String title, String description, List<Integer> listPlat);
+    boolean createMenu(String author, String title, String description, List<Integer> listPlat);
 
     /**
      * Méthode qui permet de supprimer un menu en passant l'id en paramètre
